@@ -1,0 +1,107 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1 class="page-title" data-testid="appointments-title">Appointments</h1>
+  <button class="btn btn-primary" onclick="document.getElementById('new-appointment-form').classList.toggle('hidden')" data-testid="new-appointment-btn">+ New Appointment</button>
+</div>
+
+<% if (error) { %>
+  <div class="alert alert-error" data-testid="error-message"><%= error %></div>
+<% } %>
+<% if (success) { %>
+  <div class="alert alert-success" data-testid="success-message"><%= success %></div>
+<% } %>
+
+<!-- New Appointment Form -->
+<div id="new-appointment-form" class="hidden card">
+  <h2 class="card-title">Schedule Appointment</h2>
+  <form method="POST" action="/appointments" data-testid="appointment-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="patientId">Patient *</label>
+        <select name="patientId" id="patientId" required data-testid="patient-select">
+          <option value="">Select Patient</option>
+          <% patients.forEach(p => { %>
+            <option value="<%= p.id %>"><%= p.firstName %> <%= p.lastName %> (<%= p.id %>)</option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="doctor">Doctor</label>
+        <input type="text" name="doctor" id="doctor" value="Dr. Sarah Johnson" data-testid="doctor-input">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="date">Date *</label>
+        <input type="date" name="date" id="date" required data-testid="appointment-date-input">
+      </div>
+      <div class="form-group">
+        <label for="time">Time *</label>
+        <input type="time" name="time" id="time" required data-testid="appointment-time-input">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="type">Type *</label>
+        <select name="type" id="type" required data-testid="appointment-type-select">
+          <option value="">Select Type</option>
+          <option value="Consultation">Consultation</option>
+          <option value="Follow-up">Follow-up</option>
+          <option value="Emergency">Emergency</option>
+          <option value="Routine">Routine</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <input type="text" name="notes" id="notes" data-testid="appointment-notes-input">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" data-testid="schedule-btn">Schedule</button>
+  </form>
+</div>
+
+<!-- Filter -->
+<div class="filter-bar">
+  <a href="/appointments?status=all" class="btn btn-sm <%= statusFilter === 'all' ? 'btn-primary' : 'btn-secondary' %>" data-testid="filter-all">All</a>
+  <a href="/appointments?status=Scheduled" class="btn btn-sm <%= statusFilter === 'Scheduled' ? 'btn-primary' : 'btn-secondary' %>" data-testid="filter-scheduled">Scheduled</a>
+  <a href="/appointments?status=Completed" class="btn btn-sm <%= statusFilter === 'Completed' ? 'btn-primary' : 'btn-secondary' %>" data-testid="filter-completed">Completed</a>
+  <a href="/appointments?status=Cancelled" class="btn btn-sm <%= statusFilter === 'Cancelled' ? 'btn-primary' : 'btn-secondary' %>" data-testid="filter-cancelled">Cancelled</a>
+</div>
+
+<div class="card">
+  <table class="table" data-testid="appointments-table">
+    <thead>
+      <tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Type</th><th>Status</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <% if (appointments.length === 0) { %>
+        <tr><td colspan="7" class="text-center" data-testid="no-appointments">No appointments found</td></tr>
+      <% } %>
+      <% appointments.forEach(a => { %>
+      <tr data-testid="appointment-row">
+        <td data-testid="appt-patient"><%= a.patientName %></td>
+        <td><%= a.doctor %></td>
+        <td data-testid="appt-date"><%= a.date %></td>
+        <td><%= a.time %></td>
+        <td><%= a.type %></td>
+        <td><span class="badge badge-<%= a.status.toLowerCase() %>" data-testid="appt-status"><%= a.status %></span></td>
+        <td>
+          <% if (a.status === 'Scheduled') { %>
+            <form method="POST" action="/appointments/<%= a.id %>/complete" style="display:inline">
+              <button type="submit" class="btn btn-sm btn-success" data-testid="complete-btn">Complete</button>
+            </form>
+            <form method="POST" action="/appointments/<%= a.id %>/cancel" style="display:inline">
+              <button type="submit" class="btn btn-sm btn-danger" data-testid="cancel-btn">Cancel</button>
+            </form>
+          <% } else { %>
+            <span class="text-muted">—</span>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/footer') %>

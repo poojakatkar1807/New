@@ -1,0 +1,178 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1 class="page-title" data-testid="patient-detail-title"><%= patient.firstName %> <%= patient.lastName %></h1>
+  <a href="/patients" class="btn btn-secondary">Back to Patients</a>
+</div>
+
+<div class="patient-info card">
+  <h2 class="card-title">Patient Information</h2>
+  <div class="info-grid" data-testid="patient-info">
+    <div class="info-item"><strong>Patient ID:</strong> <span data-testid="detail-patient-id"><%= patient.id %></span></div>
+    <div class="info-item"><strong>Age:</strong> <span data-testid="detail-age"><%= patient.age %></span></div>
+    <div class="info-item"><strong>Gender:</strong> <span data-testid="detail-gender"><%= patient.gender %></span></div>
+    <div class="info-item"><strong>DOB:</strong> <span data-testid="detail-dob"><%= patient.dob %></span></div>
+    <div class="info-item"><strong>Phone:</strong> <span data-testid="detail-phone"><%= patient.phone %></span></div>
+    <div class="info-item"><strong>Email:</strong> <span data-testid="detail-email"><%= patient.email %></span></div>
+    <div class="info-item"><strong>Blood Group:</strong> <span data-testid="detail-blood-group"><%= patient.bloodGroup %></span></div>
+    <div class="info-item"><strong>Address:</strong> <span data-testid="detail-address"><%= patient.address %></span></div>
+    <div class="info-item"><strong>Emergency Contact:</strong> <span data-testid="detail-emergency"><%= patient.emergencyContact %></span></div>
+    <div class="info-item"><strong>Status:</strong> <span class="badge badge-active" data-testid="detail-status"><%= patient.status %></span></div>
+  </div>
+</div>
+
+<!-- Vitals Section -->
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Vitals History</h2>
+    <button class="btn btn-sm btn-primary" onclick="document.getElementById('vitals-form').classList.toggle('hidden')" data-testid="add-vitals-btn">+ Record Vitals</button>
+  </div>
+
+  <div id="vitals-form" class="hidden form-section">
+    <form method="POST" action="/vitals" data-testid="vitals-form">
+      <input type="hidden" name="patientId" value="<%= patient.id %>">
+      <div class="form-row">
+        <div class="form-group">
+          <label>BP (mmHg) *</label>
+          <input type="text" name="bp" placeholder="120/80" required data-testid="bp-input">
+        </div>
+        <div class="form-group">
+          <label>Heart Rate (bpm) *</label>
+          <input type="number" name="heartRate" required data-testid="heart-rate-input">
+        </div>
+        <div class="form-group">
+          <label>Temperature (F)</label>
+          <input type="number" name="temp" step="0.1" data-testid="temp-input">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Weight (kg)</label>
+          <input type="number" name="weight" step="0.1" data-testid="weight-input">
+        </div>
+        <div class="form-group">
+          <label>Height (cm)</label>
+          <input type="number" name="height" data-testid="height-input">
+        </div>
+        <div class="form-group">
+          <label>SpO2 (%)</label>
+          <input type="number" name="spo2" data-testid="spo2-input">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <input type="text" name="notes" data-testid="vitals-notes-input">
+      </div>
+      <button type="submit" class="btn btn-primary" data-testid="save-vitals-btn">Save Vitals</button>
+    </form>
+  </div>
+
+  <table class="table" data-testid="vitals-table">
+    <thead>
+      <tr><th>Date</th><th>BP</th><th>Heart Rate</th><th>Temp</th><th>Weight</th><th>SpO2</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <% if (vitals.length === 0) { %>
+        <tr><td colspan="7" class="text-center">No vitals recorded</td></tr>
+      <% } %>
+      <% vitals.forEach(v => { %>
+      <tr data-testid="vitals-row">
+        <td><%= v.date %></td>
+        <td data-testid="vitals-bp"><%= v.bp %></td>
+        <td><%= v.heartRate %></td>
+        <td><%= v.temp %></td>
+        <td><%= v.weight %></td>
+        <td><%= v.spo2 %></td>
+        <td><%= v.notes %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Appointments Section -->
+<div class="card">
+  <h2 class="card-title">Appointments</h2>
+  <table class="table" data-testid="patient-appointments-table">
+    <thead>
+      <tr><th>Date</th><th>Time</th><th>Doctor</th><th>Type</th><th>Status</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <% if (appointments.length === 0) { %>
+        <tr><td colspan="6" class="text-center">No appointments</td></tr>
+      <% } %>
+      <% appointments.forEach(a => { %>
+      <tr>
+        <td><%= a.date %></td><td><%= a.time %></td><td><%= a.doctor %></td>
+        <td><%= a.type %></td>
+        <td><span class="badge badge-<%= a.status.toLowerCase() %>"><%= a.status %></span></td>
+        <td><%= a.notes %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Prescriptions Section -->
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Prescriptions</h2>
+    <button class="btn btn-sm btn-primary" onclick="document.getElementById('prescription-form').classList.toggle('hidden')" data-testid="add-prescription-btn">+ Add Prescription</button>
+  </div>
+
+  <div id="prescription-form" class="hidden form-section">
+    <form method="POST" action="/prescriptions" data-testid="prescription-form">
+      <input type="hidden" name="patientId" value="<%= patient.id %>">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Medication Name *</label>
+          <input type="text" name="medName" required data-testid="med-name-input">
+        </div>
+        <div class="form-group">
+          <label>Dosage *</label>
+          <input type="text" name="dosage" required data-testid="dosage-input">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Frequency</label>
+          <input type="text" name="frequency" placeholder="Once daily" data-testid="frequency-input">
+        </div>
+        <div class="form-group">
+          <label>Duration</label>
+          <input type="text" name="duration" placeholder="30 days" data-testid="duration-input">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <input type="text" name="notes" data-testid="prescription-notes-input">
+      </div>
+      <button type="submit" class="btn btn-primary" data-testid="save-prescription-btn">Save Prescription</button>
+    </form>
+  </div>
+
+  <% prescriptions.forEach(rx => { %>
+  <div class="prescription-card" data-testid="prescription-card">
+    <div class="prescription-header">
+      <strong>Date:</strong> <%= rx.date %> | <strong>Doctor:</strong> <%= rx.doctor %>
+    </div>
+    <table class="table">
+      <thead><tr><th>Medication</th><th>Dosage</th><th>Frequency</th><th>Duration</th></tr></thead>
+      <tbody>
+        <% rx.medications.forEach(m => { %>
+        <tr>
+          <td data-testid="med-name"><%= m.name %></td>
+          <td><%= m.dosage %></td>
+          <td><%= m.frequency %></td>
+          <td><%= m.duration %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% if (rx.notes) { %><p class="prescription-notes"><strong>Notes:</strong> <%= rx.notes %></p><% } %>
+  </div>
+  <% }) %>
+  <% if (prescriptions.length === 0) { %><p class="text-center">No prescriptions</p><% } %>
+</div>
+
+<%- include('../partials/footer') %>

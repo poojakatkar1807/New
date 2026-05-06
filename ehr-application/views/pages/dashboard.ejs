@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+
+<h1 class="page-title" data-testid="dashboard-title">Dashboard</h1>
+<p class="page-subtitle">Welcome back, <span data-testid="welcome-name"><%= user.name %></span></p>
+
+<div class="stats-grid">
+  <div class="stat-card" data-testid="stat-patients">
+    <div class="stat-number"><%= stats.totalPatients %></div>
+    <div class="stat-label">Total Patients</div>
+  </div>
+  <div class="stat-card" data-testid="stat-scheduled">
+    <div class="stat-number"><%= stats.todayAppointments %></div>
+    <div class="stat-label">Scheduled Appointments</div>
+  </div>
+  <div class="stat-card" data-testid="stat-completed">
+    <div class="stat-number"><%= stats.completedAppointments %></div>
+    <div class="stat-label">Completed Appointments</div>
+  </div>
+  <div class="stat-card" data-testid="stat-prescriptions">
+    <div class="stat-number"><%= stats.totalPrescriptions %></div>
+    <div class="stat-label">Prescriptions</div>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <div class="card">
+    <h2 class="card-title">Recent Patients</h2>
+    <table class="table" data-testid="recent-patients-table">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <% recentPatients.forEach(p => { %>
+        <tr>
+          <td><a href="/patients/<%= p.id %>"><%= p.id %></a></td>
+          <td><%= p.firstName %> <%= p.lastName %></td>
+          <td><%= p.age %></td>
+          <td><%= p.gender %></td>
+          <td><span class="badge badge-active"><%= p.status %></span></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">Upcoming Appointments</h2>
+    <table class="table" data-testid="upcoming-appointments-table">
+      <thead>
+        <tr><th>Patient</th><th>Date</th><th>Time</th><th>Type</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <% upcomingAppointments.forEach(a => { %>
+        <tr>
+          <td><%= a.patientName %></td>
+          <td><%= a.date %></td>
+          <td><%= a.time %></td>
+          <td><%= a.type %></td>
+          <td><span class="badge badge-<%= a.status.toLowerCase() %>"><%= a.status %></span></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

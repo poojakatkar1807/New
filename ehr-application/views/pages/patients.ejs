@@ -1,0 +1,43 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1 class="page-title" data-testid="patients-title">Patients</h1>
+  <a href="/patients/register" class="btn btn-primary" data-testid="register-patient-btn">+ Register Patient</a>
+</div>
+
+<div class="search-bar">
+  <form method="GET" action="/patients" data-testid="search-form">
+    <input type="text" name="search" placeholder="Search by name, ID, or phone..." value="<%= search %>" data-testid="search-input">
+    <button type="submit" class="btn btn-primary" data-testid="search-btn">Search</button>
+  </form>
+</div>
+
+<div class="card">
+  <table class="table" data-testid="patients-table">
+    <thead>
+      <tr>
+        <th>Patient ID</th><th>Name</th><th>Age</th><th>Gender</th>
+        <th>Phone</th><th>Blood Group</th><th>Status</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (patients.length === 0) { %>
+        <tr><td colspan="8" class="text-center" data-testid="no-patients">No patients found</td></tr>
+      <% } %>
+      <% patients.forEach(p => { %>
+      <tr data-testid="patient-row">
+        <td data-testid="patient-id"><%= p.id %></td>
+        <td data-testid="patient-name"><%= p.firstName %> <%= p.lastName %></td>
+        <td><%= p.age %></td>
+        <td><%= p.gender %></td>
+        <td><%= p.phone %></td>
+        <td><%= p.bloodGroup %></td>
+        <td><span class="badge badge-active"><%= p.status %></span></td>
+        <td><a href="/patients/<%= p.id %>" class="btn btn-sm btn-primary" data-testid="view-patient-btn">View</a></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/footer') %>

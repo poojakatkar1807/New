@@ -1,0 +1,86 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1 class="page-title" data-testid="register-title">Register New Patient</h1>
+  <a href="/patients" class="btn btn-secondary">Back to Patients</a>
+</div>
+
+<% if (error) { %>
+  <div class="alert alert-error" data-testid="error-message"><%= error %></div>
+<% } %>
+<% if (success) { %>
+  <div class="alert alert-success" data-testid="success-message"><%= success %></div>
+<% } %>
+
+<div class="card">
+  <form method="POST" action="/patients/register" data-testid="registration-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="firstName">First Name *</label>
+        <input type="text" id="firstName" name="firstName" required data-testid="first-name-input">
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name *</label>
+        <input type="text" id="lastName" name="lastName" required data-testid="last-name-input">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" min="0" max="150" data-testid="age-input">
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender *</label>
+        <select id="gender" name="gender" required data-testid="gender-select">
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" name="dob" data-testid="dob-input">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone *</label>
+        <input type="tel" id="phone" name="phone" required data-testid="phone-input">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" data-testid="email-input">
+      </div>
+      <div class="form-group">
+        <label for="bloodGroup">Blood Group</label>
+        <select id="bloodGroup" name="bloodGroup" data-testid="blood-group-select">
+          <option value="">Select</option>
+          <option value="A+">A+</option><option value="A-">A-</option>
+          <option value="B+">B+</option><option value="B-">B-</option>
+          <option value="AB+">AB+</option><option value="AB-">AB-</option>
+          <option value="O+">O+</option><option value="O-">O-</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea id="address" name="address" rows="2" data-testid="address-input"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="emergencyContact">Emergency Contact</label>
+      <input type="text" id="emergencyContact" name="emergencyContact" placeholder="Name - Phone" data-testid="emergency-contact-input">
+    </div>
+
+    <button type="submit" class="btn btn-primary" data-testid="submit-btn">Register Patient</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HealthCare EHR</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<% if (user) { %>
+<nav class="navbar">
+  <div class="nav-brand">HealthCare EHR</div>
+  <div class="nav-links">
+    <a href="/dashboard" class="nav-link" data-testid="nav-dashboard">Dashboard</a>
+    <a href="/patients" class="nav-link" data-testid="nav-patients">Patients</a>
+    <a href="/appointments" class="nav-link" data-testid="nav-appointments">Appointments</a>
+  </div>
+  <div class="nav-user">
+    <span data-testid="user-name"><%= user.name %></span>
+    <span class="user-role" data-testid="user-role">(<%= user.role %>)</span>
+    <a href="/logout" class="btn btn-sm btn-danger" data-testid="logout-btn">Logout</a>
+  </div>
+</nav>
+<% } %>
+<main class="container">
